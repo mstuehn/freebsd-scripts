@@ -78,12 +78,23 @@ hostname="$(echo ${KERNEL} | tr '[:upper:]' '[:lower:]')"
 cat << EOF >> ${ROOTFS}/etc/rc.conf
 hostname="${hostname}"
 ifconfig_DEFAULT="DHCP"
+
 sshd_enable="YES"
+
 sendmail_enable="NONE"
 sendmail_submit_enable="NO"
 sendmail_outbound_enable="NO"
 sendmail_msp_queue_enable="NO"
-#growfs_enable="YES"
+
+ntpdate_enable="YES"
+ntpd_enable="YES"
+
+powerd_enable="YES"
+EOF
+
+echo sysctl.conf
+cat << EOF >> ${ROOTFS}/etc/sysctl.conf
+hw.snd.latency=0
 EOF
 
 echo loader.conf
@@ -96,7 +107,7 @@ sun50i-h5-nanopi-neo2_type="dtb"
 sun50i-h5-nanopi-neo2_name="sun50i-h5-nanopi-neo2.dtb"
 # DTB OVERLAYS
 # fdt_overlays="example.dtbo,example2.dtbo"
-fdt_overlays="sun50i-nanopi-neo2-sid,sun50i-nanopi-neo2-ths.dtbo,sun50i-nanopi-neo2-nanohat.dtbo"
+fdt_overlays="sun50i-h5-opp.dtbo,sun50i-h5-sid,sun50i-h5-ths.dtbo,sun50i-h5-nanopi-neo2-opp.dtbo,sun50i-h5-nanopi-neo2-nanohat.dtbo"
 EOF
 fi
 
@@ -106,7 +117,7 @@ if [ "$?" == 0 ]; then
     mkdir -p ${MSDOSFS}
     mount -t msdosfs /dev/${DISK}s1 ${MSDOSFS}
 
-    echo Copy ubldr and u-boot
+    echo Copy EFI Loader
     mkdir -p ${MSDOSFS}/EFI/BOOT
     cp -p ${ROOTFS}/boot/loader.efi ${MSDOSFS}/EFI/BOOT/bootaa64.efi
     umount ${MSDOSFS}
