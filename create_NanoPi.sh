@@ -107,7 +107,7 @@ sun50i-h5-nanopi-neo2_type="dtb"
 sun50i-h5-nanopi-neo2_name="sun50i-h5-nanopi-neo2.dtb"
 # DTB OVERLAYS
 # fdt_overlays="example.dtbo,example2.dtbo"
-fdt_overlays="sun50i-h5-opp.dtbo,sun50i-h5-sid,sun50i-h5-ths.dtbo,sun50i-h5-nanopi-neo2-opp.dtbo,sun50i-h5-nanopi-neo2-nanohat.dtbo"
+fdt_overlays="sun50i-h5-opp.dtbo,sun50i-h5-nanopi-neo2-opp.dtbo,sun50i-h5-nanopi-neo2-nanohat.dtbo"
 EOF
 fi
 
@@ -123,6 +123,7 @@ if [ "$?" == 0 ]; then
     umount ${MSDOSFS}
 fi
 
+cp /usr/obj/usr/src/arm64.aarch64/sys/${KERNEL}/modules/usr/src/sys/modules/dtb/allwinner/sun50i-h5*.dtbo ${ROOTFS}/boot/dtb/
 
 confirm  "Umount all?"
 if [ "$?" == 0 ]; then
