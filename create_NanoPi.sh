@@ -1,23 +1,59 @@
 #!/bin/sh
 
+set -e
+
 DISK=da0
 ROOTFS=/mnt/rootfs
 KERNEL=GENERIC-NODEBUG
 MSDOSFS=${ROOTFS}/boot/msdos
 BOOTLOADER=/usr/local/share/u-boot/u-boot-nanopi-neo2/u-boot-sunxi-with-spl.bin
 
-confirm() {
-read -p "$1 [Y/n] " yn
-case $yn in
-    [YyJj]* | "" )
-        return 0
+case $1 in
+    -all|--all|-a)
+        ALL="yes"
+        ;;
+    -h|--help)
+        echo "$0 [OPTIONS]"
+        echo "OPTIONS:    "
+        echo "               -a | --all)    execute all steps"
+        echo "               -h | --help)   print this help"
+        exit 0
         ;;
     *)
-        return 1
+        ALL="no"
         ;;
 esac
 
+confirm() {
+    if [ "$ALL" = "yes" ]; then
+        return 0
+    fi
+
+    read -p "$1 [Y/n] " yn
+    case $yn in
+        [YyJj]* | "" )
+            return 0
+            ;;
+        *)
+            return 1
+            ;;
+    esac
 }
+
+confirm "Build world and kernel?"
+if [ "$?" == 0 ]; then
+    make -C /usr/src \
+        TARGET=arm64 \
+        TARGET_ARCH=aarch64 \
+        DESTDIR=${ROOTFS} \
+        KERNCONF=${KERNEL} \
+        buildworld buildkernel
+fi
+
+confirm "Install nanopi-U-Boot?"
+if [ "$?" == 0 ]; then
+    pkg install u-boot-nanopi-neo2
+fi
 
 if [ "$(df | grep -c ${DISK})" != "0" ]; then
     echo Unmounting /dev/${DISK}s2a
