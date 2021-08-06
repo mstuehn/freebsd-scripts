@@ -1,4 +1,5 @@
 #/dev/ufs/aarch64rootfs / ufs rw 1 1
 /dev/ufs/aarch64rootfs / ufs ro 1 1
+/.var/db/pkg            /var/db/pkg     nullfs  rw,late 0       0
 #/dev/msdosfs/MSDOSBOOT /boot/msdos msdosfs ro,noatime 0 0
 #tmpfs /tmp tmpfs rw,mode=1777,size=50m 0  0
