@@ -1,0 +1,96 @@
+From bc48cfb8d720288fc44f7c3eae8a2663a7188ee7 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Manuel=20St=C3=BChn?= <freebsd@justmail.de>
+Date: Fri, 25 Dec 2020 17:35:17 +0100
+Subject: [PATCH] add overlay for NanoPI NEO2 + Nanohat
+
+---
+ .../sun50i-h5-nanopi-neo2-nanohat.dtso        | 65 +++++++++++++++++++
+ sys/modules/dtb/allwinner/Makefile            |  3 +-
+ 2 files changed, 67 insertions(+), 1 deletion(-)
+ create mode 100644 sys/dts/arm64/overlays/sun50i-h5-nanopi-neo2-nanohat.dtso
+
+diff --git a/sys/dts/arm64/overlays/sun50i-h5-nanopi-neo2-nanohat.dtso b/sys/dts/arm64/overlays/sun50i-h5-nanopi-neo2-nanohat.dtso
+new file mode 100644
+index 000000000000..435cdd4a2e2e
+--- /dev/null
++++ b/sys/dts/arm64/overlays/sun50i-h5-nanopi-neo2-nanohat.dtso
+@@ -0,0 +1,65 @@
++/dts-v1/;
++/plugin/;
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++
++/ {
++    compatible = "allwinner,sun50i-h5";
++};
++
++&{/soc} {
++
++    codec {
++        status = "okay";
++    };
++
++
++    // /* Not yet supported on allwinner */
++    // gpio-keys {
++    //     compatible = "gpio-keys";
++
++    //     up-key {
++    //         label = "Up Key";
++    //         linux,code = <103>;
++    //         gpios = <&pio 0 0 GPIO_ACTIVE_HIGH>; /* PA0 */
++    //     };
++
++    //     down-key {
++    //         label = "Down Key";
++    //         linux,code = <108>;
++    //         gpios = <&pio 0 2 GPIO_ACTIVE_HIGH>; /* PA2 */
++    //     };
++
++    //     return-key {
++    //         label = "Return Key";
++    //         linux,code = <28>;
++    //         gpios = <&pio 0 3 GPIO_ACTIVE_HIGH>; /* PA3 */
++    //     };
++
++    // };
++
++    pinctrl-names = "default";
++    pinctrl-0 = <&button_pins>;
++
++    pinctrl@1c20800 {
++        button_pins: buttons {
++            pins = "PA0", "PA2", "PA3";
++            function = "gpio_in";
++        };
++    };
++
++    i2c@1c2ac00 {
++        status = "okay";
++    };
++
++    usb@1c1b000 {
++
++        status = "okay";
++    };
++
++    usb@1c1b400 {
++
++        status = "okay";
++    };
++};
+diff --git a/sys/modules/dtb/allwinner/Makefile b/sys/modules/dtb/allwinner/Makefile
+index 184cadb63fb9..00a91bea1adc 100644
+--- a/sys/modules/dtb/allwinner/Makefile
++++ b/sys/modules/dtb/allwinner/Makefile
+@@ -57,7 +57,8 @@ DTSO=	sun50i-a64-opp.dtso \
+ 	sun50i-a64-spi0-spigen.dtso \
+ 	sun50i-a64-timer.dtso \
+ 	sun50i-h5-opp.dtso \
+-	sun50i-h5-nanopi-neo2-opp.dtso
++	sun50i-h5-nanopi-neo2-opp.dtso \
++	sun50i-h5-nanopi-neo2-nanohat.dtso
+ 
+ .endif
+ 
